@@ -195,12 +195,12 @@ const Navbar = () => {
     <>
       <ScrollProgressBar />
       <SideRail activeId={activeId} />
-      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'nav-frosted py-4' : 'bg-transparent py-8'}`}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-10 flex justify-between items-center">
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled ? 'nav-frosted py-3' : 'bg-transparent py-4 lg:py-5'}`}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-10 flex justify-between items-center">
           <a 
             href="#home" 
             onClick={(e) => { e.preventDefault(); scrollToSection('home'); }}
-            className="flex items-center space-x-3 group"
+            className="flex items-center gap-2 sm:gap-3 group"
           >
             <AnimatePresence>
               {isScrolled && (
@@ -208,25 +208,30 @@ const Navbar = () => {
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -10 }}
-                  className="text-brand-aqua"
+                  className="text-brand-aqua shrink-0"
                 >
-                  <Droplets className="w-5 h-5" />
+                  <Droplets className="w-4 h-4 sm:w-5 sm:h-5" />
                 </motion.div>
               )}
             </AnimatePresence>
-            <span className={`font-display font-black tracking-tighter text-white uppercase transition-all duration-300 ${isScrolled ? 'text-lg' : 'text-xl'}`}>
-              SPRINGFINE <span className={isScrolled ? 'hidden md:inline' : 'inline'}>HYDROCONSULTING</span>
-            </span>
+            <div className="flex flex-col leading-none">
+              <span className={`font-display font-black tracking-tight text-white uppercase transition-all duration-300 ${isScrolled ? 'text-base sm:text-lg' : 'text-lg sm:text-[2rem]'}`}>
+                SPRINGFINE
+              </span>
+              <span className={`font-display font-black tracking-tight text-white uppercase transition-all duration-300 ${isScrolled ? 'text-base sm:text-lg' : 'text-lg sm:text-[2rem]'} ${isScrolled ? 'hidden md:block' : 'hidden sm:block'}`}>
+                HYDROCONSULTING
+              </span>
+            </div>
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center space-x-8 relative">
+          <div className="hidden lg:flex items-center gap-6 xl:gap-7 relative">
             {NAV_ITEMS.map((item) => (
               <button 
                 key={item.id}
                 data-id={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className={`text-[13px] font-semibold uppercase tracking-[0.12em] transition-all duration-300 relative py-2 ${
+                className={`text-[12px] font-semibold uppercase tracking-[0.14em] transition-all duration-300 relative py-2 ${
                   activeId === item.id ? 'text-white' : 'text-white/65 hover:text-white'
                 } hover:[text-shadow:0_0_10px_rgba(0,194,199,0.4)]`}
               >
@@ -239,7 +244,7 @@ const Navbar = () => {
             
             <button 
               onClick={() => scrollToSection('contact')}
-              className="ml-6 px-6 py-2 bg-brand-aqua text-white text-[11px] font-black uppercase tracking-widest hover:bg-white hover:text-brand-blue transition-all duration-300"
+              className="ml-3 xl:ml-4 px-5 xl:px-6 py-2.5 bg-brand-aqua text-white text-[11px] font-black uppercase tracking-[0.16em] hover:bg-white hover:text-brand-blue transition-all duration-300"
             >
               Get Quote
             </button>
@@ -272,7 +277,7 @@ const Navbar = () => {
                   key={item.id} 
                   onClick={() => scrollToSection(item.id)}
                   style={{ animationDelay: `${idx * 0.05}s` }}
-                  className={`text-lg font-bold uppercase tracking-[0.2em] w-full text-center py-4 stagger-fade-in ${
+                  className={`text-base sm:text-lg font-bold uppercase tracking-[0.12em] sm:tracking-[0.2em] w-full text-center py-4 stagger-fade-in ${
                     activeId === item.id ? 'text-brand-aqua border-l-4 border-brand-aqua' : 'text-white/70'
                   }`}
                 >
@@ -281,7 +286,7 @@ const Navbar = () => {
               ))}
               <button 
                 onClick={() => scrollToSection('contact')}
-                className="w-full py-5 bg-brand-aqua text-white text-xs font-black uppercase tracking-[0.3em] mt-10"
+                className="w-full py-5 bg-brand-aqua text-white text-xs font-black uppercase tracking-[0.18em] sm:tracking-[0.3em] mt-10"
               >
                 Get a Free Quote
               </button>
@@ -295,7 +300,7 @@ const Navbar = () => {
 
 const Hero = () => {
   return (
-    <section id="home" className="relative h-screen min-h-[620px] md:min-h-[700px] w-full overflow-hidden flex items-center bg-brand-blue border-4 md:border-8 border-brand-blue">
+    <section id="home" className="relative min-h-[100svh] md:min-h-[700px] w-full overflow-hidden flex items-center bg-brand-blue border-4 md:border-8 border-brand-blue pt-28 sm:pt-32 lg:pt-36 pb-10 sm:pb-14">
       {/* Background Layer */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-tr from-brand-blue/95 via-brand-blue/70 to-brand-aqua/35 z-10" />
@@ -306,21 +311,21 @@ const Hero = () => {
         />
       </div>
 
-      <div className="relative z-20 max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+      <div className="relative z-20 max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-14 items-center">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="flex items-center gap-4 mb-6">
+          <div className="flex items-center gap-4 mb-7">
             <span className="h-px w-12 bg-brand-gold"></span>
-            <span className="text-brand-aqua text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em]">Save Water, Save Earth</span>
+            <span className="text-brand-aqua text-[10px] font-black uppercase tracking-[0.12em] sm:tracking-[0.2em] md:tracking-[0.4em]">Save Water, Save Earth</span>
           </div>
-          <h1 className="text-5xl sm:text-6xl lg:text-8xl font-display text-white mb-6 leading-[0.95] lg:leading-[0.9] font-black">
+          <h1 className="text-4xl sm:text-6xl lg:text-8xl font-display text-white mb-7 leading-[0.95] lg:leading-[0.9] font-black">
             SAVING WATER,<br />
             <span className="text-brand-gold">SAVING EARTH.</span>
           </h1>
-          <p className="text-white/70 text-lg max-w-md mb-10 leading-relaxed font-medium">
+          <p className="text-white/70 text-base sm:text-lg max-w-md mb-9 sm:mb-10 leading-relaxed font-medium">
             Innovative borehole drilling and water systems enhancing access to safe water in Kitale and beyond.
           </p>
           <div className="flex flex-wrap gap-4">
@@ -333,7 +338,7 @@ const Hero = () => {
                 500+ PROJECTS
              </div>
           </div>
-          <div className="mt-12">
+          <div className="mt-10 sm:mt-12">
             <a href="#contact" className="btn-primary inline-block px-12 py-4">
               Get a Free Quote
             </a>
@@ -724,7 +729,7 @@ const Contact = () => {
                    <label className="text-[10px] font-black tracking-widest uppercase mb-1 block opacity-50">Your Message</label>
                    <textarea placeholder="Describe your project..." className="w-full bg-white border-b-2 border-brand-blue/10 py-4 text-sm font-bold focus:border-brand-aqua focus:outline-none transition-colors h-24 resize-none"></textarea>
                  </div>
-                 <button className="w-full py-5 bg-brand-aqua text-white text-xs font-black uppercase tracking-[0.3em] hover:bg-brand-blue transition-all duration-300 shadow-lg shadow-brand-aqua/20 mt-6">
+                 <button className="w-full py-5 bg-brand-aqua text-white text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.3em] hover:bg-brand-blue transition-all duration-300 shadow-lg shadow-brand-aqua/20 mt-6">
                    Submit Request
                  </button>
               </form>
@@ -843,7 +848,7 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
       <div className="absolute inset-0 earth-strata" />
       
       {/* Earth Layer Labels */}
-      <div className="absolute inset-x-0 inset-y-0 pointer-events-none opacity-20 flex flex-col text-white text-[10px] font-black uppercase tracking-[1em] px-10">
+      <div className="absolute inset-x-0 inset-y-0 pointer-events-none opacity-20 flex flex-col text-white text-[10px] font-black uppercase tracking-[0.4em] sm:tracking-[1em] px-6 sm:px-10">
         <div className="h-1/4 flex items-center">Topsoil</div>
         <div className="h-1/4 flex items-center">Clay</div>
         <div className="h-1/4 flex items-center">Rock</div>
@@ -882,7 +887,7 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
             <Droplets className="w-12 h-12 text-brand-aqua" />
             <h1 className="text-4xl md:text-5xl font-display font-black text-white tracking-tighter uppercase">SPRINGFINE</h1>
           </div>
-          <p className="text-brand-aqua font-black uppercase tracking-[0.5em] text-xs">Save Water, Save Earth</p>
+          <p className="text-brand-aqua font-black uppercase tracking-[0.2em] sm:tracking-[0.5em] text-xs">Save Water, Save Earth</p>
         </motion.div>
       </div>
     </div>

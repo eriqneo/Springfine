@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -13,9 +12,11 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    overflow-x: clip;
   }
   body {
     @apply font-sans text-brand-blue bg-brand-blue;
+    overflow-x: clip;
   }
 }
 
@@ -166,4 +167,10 @@
 
 .animate-wave-slow {
   animation: wave 15s ease-in-out infinite reverse;
+}
+
+@media (max-width: 400px) {
+  .section-padding {
+    @apply px-5 py-16;
+  }
 }
