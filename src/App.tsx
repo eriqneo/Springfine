@@ -265,7 +265,7 @@ const Navbar = () => {
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-0 left-0 w-full min-h-screen bg-brand-blue/95 backdrop-blur-xl pt-32 pb-10 px-10 flex flex-col items-center space-y-6 lg:hidden"
+              className="absolute top-0 left-0 w-full min-h-screen bg-brand-blue/95 backdrop-blur-xl pt-28 pb-10 px-6 sm:px-10 flex flex-col items-center space-y-6 lg:hidden"
             >
               {NAV_ITEMS.map((item, idx) => (
                 <button 
@@ -295,7 +295,7 @@ const Navbar = () => {
 
 const Hero = () => {
   return (
-    <section id="home" className="relative h-screen min-h-[700px] w-full overflow-hidden flex items-center bg-brand-blue border-8 border-brand-blue">
+    <section id="home" className="relative h-screen min-h-[620px] md:min-h-[700px] w-full overflow-hidden flex items-center bg-brand-blue border-4 md:border-8 border-brand-blue">
       {/* Background Layer */}
       <div className="absolute inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-tr from-brand-blue/95 via-brand-blue/70 to-brand-aqua/35 z-10" />
@@ -306,7 +306,7 @@ const Hero = () => {
         />
       </div>
 
-      <div className="relative z-20 max-w-7xl mx-auto px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div className="relative z-20 max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -314,9 +314,9 @@ const Hero = () => {
         >
           <div className="flex items-center gap-4 mb-6">
             <span className="h-px w-12 bg-brand-gold"></span>
-            <span className="text-brand-aqua text-[10px] font-black uppercase tracking-[0.4em]">Save Water, Save Earth</span>
+            <span className="text-brand-aqua text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em]">Save Water, Save Earth</span>
           </div>
-          <h1 className="text-7xl lg:text-8xl font-display text-white mb-6 leading-[0.9] font-black">
+          <h1 className="text-5xl sm:text-6xl lg:text-8xl font-display text-white mb-6 leading-[0.95] lg:leading-[0.9] font-black">
             SAVING WATER,<br />
             <span className="text-brand-gold">SAVING EARTH.</span>
           </h1>
@@ -435,14 +435,14 @@ const StatsSection = () => {
 const About = () => {
   return (
     <section id="about" className="section-padding bg-brand-blue text-white">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           className="relative order-2 lg:order-1"
         >
-           <div className="grid grid-cols-2 gap-4 h-full">
+           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 h-full">
               <div className="bg-brand-aqua p-10 flex flex-col justify-center border-l-8 border-brand-gold">
                 <h3 className="text-brand-blue text-xs font-black uppercase tracking-[0.3em] mb-4">Our Mission</h3>
                 <p className="text-brand-blue text-sm leading-relaxed font-bold italic">
@@ -572,18 +572,18 @@ const WhyChooseUs = () => {
   return (
     <section id="why-us" className="bg-white py-0 border-y-8 border-brand-blue">
        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row">
-          <div className="lg:w-1/2 p-20 lg:p-32 space-y-12 text-brand-blue">
+          <div className="lg:w-1/2 p-10 md:p-14 lg:p-32 space-y-10 lg:space-y-12 text-brand-blue">
             <h2 className="text-5xl font-display font-black leading-tight">
               Trusted by<br />Industry Leaders
             </h2>
-            <div className="grid grid-cols-2 gap-10 opacity-30 grayscale saturate-0">
+            <div className="grid grid-cols-2 gap-6 md:gap-10 opacity-30 grayscale saturate-0">
                <div className="font-black italic text-lg uppercase tracking-tighter">RESIDENTIAL</div>
                <div className="font-black italic text-lg uppercase tracking-tighter">SCHOOLS</div>
                <div className="font-black italic text-lg uppercase tracking-tighter">NGOS</div>
                <div className="font-black italic text-lg uppercase tracking-tighter">AGRICULTURAL</div>
             </div>
           </div>
-          <div className="lg:w-1/2 bg-brand-aqua p-20 lg:p-32 border-l-8 border-brand-blue flex flex-col justify-center">
+          <div className="lg:w-1/2 bg-brand-aqua p-10 md:p-14 lg:p-32 lg:border-l-8 border-brand-blue flex flex-col justify-center">
              <div className="space-y-8 text-brand-blue">
                 <div className="flex items-center gap-6">
                    <ShieldCheck className="w-10 h-10" />
@@ -638,7 +638,7 @@ const Values = () => {
     <section id="values" className="section-padding bg-brand-blue overflow-hidden relative">
       <div className="absolute top-0 right-0 w-1/3 h-full bg-brand-aqua/5 -skew-x-12 translate-x-1/2" />
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="flex flex-col md:flex-row gap-20 items-end mb-20">
+        <div className="flex flex-col md:flex-row gap-12 md:gap-20 items-end mb-16 md:mb-20">
            <div className="flex-1 space-y-6">
              <span className="text-brand-gold text-xs font-black uppercase tracking-[0.4em]">Core Values</span>
              <h2 className="text-5xl font-display font-black text-white leading-none">THE SPRINGFINE<br /><span className="text-brand-aqua italic tracking-tighter">STANDARD.</span></h2>
@@ -666,10 +666,10 @@ const Values = () => {
 const Contact = () => {
   return (
     <section id="contact" className="section-padding bg-[#F0F6FF] text-brand-blue overflow-hidden">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
         <div className="space-y-16">
           <div className="space-y-8">
-            <h2 className="text-6xl font-display font-black leading-tight">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-display font-black leading-tight">
               GET YOUR<br />PROJECTS<br /><span className="text-brand-aqua italic tracking-tighter">STARTED.</span>
             </h2>
             <p className="text-brand-blue/60 text-base max-w-sm font-medium">Reach out to our Kitale office for a technical consultation and site assessment.</p>
@@ -746,7 +746,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-10 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20 text-white/70">
           <div className="space-y-6">
              <div className="flex items-center gap-3">
@@ -804,10 +804,10 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-white/5 py-10 flex flex-col md:flex-row justify-between items-center gap-6">
-           <p className="text-[10px] uppercase font-black tracking-[0.4em] text-white/30">
+           <p className="text-[10px] uppercase font-black tracking-[0.2em] md:tracking-[0.4em] text-white/30 text-center md:text-left">
              © 2025 Springfine Hydroconsulting. All Rights Reserved.
            </p>
-           <div className="flex gap-8 text-[10px] font-black uppercase tracking-[0.4em] text-white/30">
+           <div className="flex flex-wrap justify-center md:justify-end gap-6 md:gap-8 text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-white/30">
               <span className="hover:text-brand-aqua cursor-pointer transition-colors">Integrity</span>
               <span className="hover:text-brand-aqua cursor-pointer transition-colors">Quality</span>
               <span className="hover:text-brand-aqua cursor-pointer transition-colors">Sustainability</span>
