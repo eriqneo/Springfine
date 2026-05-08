@@ -1,0 +1,169 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Georgia", serif;
+  --font-sans: "DM Sans", sans-serif;
+  
+  --color-brand-blue: #0B2E5C;
+  --color-brand-aqua: #00C2C7;
+  --color-brand-gold: #E6A817;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply font-sans text-brand-blue bg-brand-blue;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-gold hover:brightness-110 text-brand-blue font-bold py-3 px-8 transition-all duration-300 uppercase tracking-widest text-xs;
+  }
+  .section-padding {
+    @apply py-24 px-8 md:px-16 lg:px-32;
+  }
+  .geometric-card {
+    @apply bg-white/5 border border-white/10 backdrop-blur-md p-8 transition-all hover:bg-white/10;
+  }
+}
+
+/* --- Premium Navigation Styles --- */
+.nav-frosted {
+  background: rgba(11, 46, 92, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 194, 199, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link-underline {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  height: 2px;
+  background: #00C2C7;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transform-origin: left;
+}
+
+.rail-dot-pulse::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid #00C2C7;
+  animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+.stagger-fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: staggerFadeIn 0.5s ease-out forwards;
+}
+
+@keyframes staggerFadeIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Borehole Cinematic Loader Styles --- */
+.earth-strata {
+  background: linear-gradient(to bottom, 
+    #5C3A1E 0%, #5C3A1E 25%, 
+    #C1440E 25%, #C1440E 50%, 
+    #6B6B6B 50%, #6B6B6B 75%, 
+    #1A0A00 75%, #1A0A00 100%
+  );
+  background-size: 100% 400%;
+  animation: strata-slide 3s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+
+@keyframes strata-slide {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 0% 100%; }
+}
+
+.drill-vibration {
+  animation: vibrate 0.1s linear infinite;
+}
+
+@keyframes vibrate {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1px) translateY(1px); }
+  50% { transform: translateX(1px) translateY(-1px); }
+  75% { transform: translateX(-1px) translateY(-1px); }
+}
+
+.drill-descend {
+  animation: descend 3s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+}
+
+@keyframes descend {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(75vh); }
+}
+
+.water-burst {
+  animation: burst 0.5s ease-out forwards;
+  animation-delay: 2.8s;
+  opacity: 0;
+}
+
+@keyframes burst {
+  0% { opacity: 0; transform: scale(0) translateY(0); }
+  50% { opacity: 1; transform: scale(1.5) translateY(-50px); }
+  100% { opacity: 0; transform: scale(3) translateY(-150px); }
+}
+
+.water-fill {
+  background-color: #0B2E5C;
+  transform: translateY(100%);
+  animation: fill-up 1s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+  animation-delay: 3s;
+}
+
+@keyframes fill-up {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+
+.loader-fade-out {
+  animation: loader-slide-up 0.8s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+}
+
+@keyframes loader-slide-up {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-100%); }
+}
+
+.particle {
+  position: absolute;
+  background: #00C2C7;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+@keyframes wave {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(-25%); }
+  100% { transform: translateX(0); }
+}
+
+.animate-wave {
+  animation: wave 10s ease-in-out infinite;
+}
+
+.animate-wave-slow {
+  animation: wave 15s ease-in-out infinite reverse;
+}
