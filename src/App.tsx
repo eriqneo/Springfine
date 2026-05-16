@@ -25,6 +25,8 @@ import {
   RotateCw
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { pb, getPbImageUrl } from './lib/pb';
+import { usePbCollection } from './lib/usePb';
 
 // --- Constants ---
 
@@ -32,6 +34,7 @@ const NAV_ITEMS = [
   { name: 'Home', id: 'home' },
   { name: 'About', id: 'about' },
   { name: 'Services', id: 'services' },
+  { name: 'Gallery', id: 'gallery' },
   { name: 'Why Us', id: 'why-us' },
   { name: 'Clients', id: 'clients' },
   { name: 'Values', id: 'values' },
@@ -219,7 +222,7 @@ const Navbar = () => {
                 SPRINGFINE
               </span>
               <span className={`font-display font-black tracking-tight text-white uppercase transition-all duration-300 ${isScrolled ? 'text-base sm:text-lg' : 'text-lg sm:text-[2rem]'} ${isScrolled ? 'hidden md:block' : 'hidden sm:block'}`}>
-                HYDROCONSULTING
+                HYDROSOLUTIONS
               </span>
             </div>
           </a>
@@ -299,15 +302,31 @@ const Navbar = () => {
 };
 
 const Hero = () => {
+  const { data } = usePbCollection<any>('hero');
+  const content = data[0] || {
+    headline: 'SAVING WATER, SAVING EARTH.',
+    subheadline: 'Innovative borehole drilling and water systems enhancing access to safe water in Kitale and beyond.',
+    tagline: 'Save Water, Save Earth',
+    cta_label: 'Get a Free Quote',
+    badge1: 'EST. 2018',
+    badge2: '500+ PROJECTS',
+    background: '',
+    rig_image: ''
+  };
+
+  const bgUrl = content.background ? getPbImageUrl(content, content.background) : "/well.png";
+  const rigUrl = content.rig_image ? getPbImageUrl(content, content.rig_image, '800x0') : "/bore.jpeg";
+
   return (
     <section id="home" className="relative min-h-[100svh] md:min-h-[700px] w-full overflow-hidden flex items-center bg-brand-blue border-4 md:border-8 border-brand-blue pt-28 sm:pt-32 lg:pt-36 pb-10 sm:pb-14">
       {/* Background Layer */}
       <div className="absolute inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-tr from-brand-blue/95 via-brand-blue/70 to-brand-aqua/35 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-brand-blue/95 via-brand-blue/85 to-brand-aqua/25 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-blue/40 z-10" />
         <img 
-          src="/well.png" 
+          src={bgUrl} 
           alt="Springfine Hydrosolutions Drilling" 
-          className="w-full h-full object-cover opacity-30 mix-blend-overlay"
+          className="w-full h-full object-cover opacity-20 mix-blend-overlay"
         />
       </div>
 
@@ -319,28 +338,28 @@ const Hero = () => {
         >
           <div className="flex items-center gap-4 mb-7">
             <span className="h-px w-12 bg-brand-gold"></span>
-            <span className="text-brand-aqua text-[10px] font-black uppercase tracking-[0.12em] sm:tracking-[0.2em] md:tracking-[0.4em]">Save Water, Save Earth</span>
+            <span className="text-brand-aqua text-[10px] font-black uppercase tracking-[0.12em] sm:tracking-[0.2em] md:tracking-[0.4em]">{content.tagline}</span>
           </div>
           <h1 className="text-4xl sm:text-6xl lg:text-8xl font-display text-white mb-7 leading-[0.95] lg:leading-[0.9] font-black">
-            SAVING WATER,<br />
-            <span className="text-brand-gold">SAVING EARTH.</span>
+            {content.headline.includes(',') ? content.headline.split(',')[0] + ',' : content.headline}<br />
+            <span className="text-brand-gold">{content.headline.includes(',') ? content.headline.split(',')[1] : ''}</span>
           </h1>
           <p className="text-white/70 text-base sm:text-lg max-w-md mb-9 sm:mb-10 leading-relaxed font-medium">
-            Innovative borehole drilling and water systems enhancing access to safe water in Kitale and beyond.
+            {content.subheadline}
           </p>
           <div className="flex flex-wrap gap-4">
              <div className="px-6 py-3 bg-white/5 backdrop-blur-md border border-brand-aqua/30 text-[11px] font-black tracking-[0.2em] uppercase text-brand-aqua flex items-center gap-2 shadow-[0_0_20px_rgba(0,194,199,0.1)]">
                 <div className="w-1.5 h-1.5 bg-brand-aqua rounded-full animate-pulse" />
-                EST. 2018
+                {content.badge1}
              </div>
              <div className="px-6 py-3 bg-white/5 backdrop-blur-md border border-brand-gold/30 text-[11px] font-black tracking-[0.2em] uppercase text-brand-gold flex items-center gap-2 shadow-[0_0_20px_rgba(230,168,23,0.1)]">
                 <div className="w-1.5 h-1.5 bg-brand-gold rounded-full animate-pulse" />
-                500+ PROJECTS
+                {content.badge2}
              </div>
           </div>
           <div className="mt-10 sm:mt-12">
             <a href="#contact" className="btn-primary inline-block px-12 py-4">
-              Get a Free Quote
+              {content.cta_label}
             </a>
           </div>
         </motion.div>
@@ -353,7 +372,7 @@ const Hero = () => {
         >
            <div className="relative aspect-square border-4 border-white/10 p-4">
               <div className="absolute inset-0 border-4 border-brand-aqua translate-x-4 -translate-y-4 -z-10" />
-              <img src="/bore.jpeg" className="w-full h-full object-cover transition-all duration-700" alt="rig" />
+              <img src={rigUrl} className="w-full h-full object-cover transition-all duration-700" alt="rig" />
               <div className="absolute -bottom-8 -left-8 bg-brand-gold p-10 border-l-8 border-brand-blue">
                  <Droplets className="w-12 h-12 text-brand-blue" />
               </div>
@@ -412,11 +431,13 @@ const StatItem = ({ target, suffix, label }: { target: number, suffix: string, l
 };
 
 const StatsSection = () => {
-  const stats = [
-    { target: 500, suffix: "+", label: "Boreholes Drilled" },
-    { target: 15, suffix: "+", label: "Years Experience" },
-    { target: 8, suffix: "", label: "Counties Served" },
-    { target: 98, suffix: "%", label: "Client Satisfaction" },
+  const { data } = usePbCollection<any>('stats', { sort: 'order' });
+
+  const stats = data.length > 0 ? data : [
+    { value: 500, suffix: "+", label: "Boreholes Drilled" },
+    { value: 15, suffix: "+", label: "Years Experience" },
+    { value: 8, suffix: "", label: "Counties Served" },
+    { value: 98, suffix: "%", label: "Client Satisfaction" },
   ];
 
   return (
@@ -426,7 +447,7 @@ const StatsSection = () => {
         {stats.map((stat, idx) => (
           <StatItem 
             key={idx} 
-            target={stat.target} 
+            target={stat.value} 
             suffix={stat.suffix} 
             label={stat.label} 
           />
@@ -494,7 +515,21 @@ const About = () => {
 };
 
 const Services = () => {
-  const services = [
+  const { data } = usePbCollection<any>('services', { sort: 'order' });
+
+  const iconMap: any = {
+    Search: <Search className="w-10 h-10" />,
+    Droplets: <Droplets className="w-10 h-10" />,
+    Zap: <Zap className="w-10 h-10" />,
+    ShieldCheck: <ShieldCheck className="w-10 h-10" />,
+    RotateCw: <RotateCw className="w-10 h-10" />,
+    Waves: <Waves className="w-10 h-10" />
+  };
+
+  const services = data.length > 0 ? data.map(s => ({
+    ...s,
+    icon: iconMap[s.icon_name] || <Droplets className="w-10 h-10" />
+  })) : [
     { 
       title: "Groundwater Exploration", 
       desc: "Hydrogeological surveys to identify the best drilling sites", 
@@ -561,12 +596,164 @@ const Services = () => {
                 {service.icon}
               </div>
               <div className="space-y-4">
-                <span className="text-brand-aqua text-[10px] font-black uppercase tracking-widest">{service.label}</span>
+                <span className="text-brand-aqua text-[10px] font-black uppercase tracking-widest">{service.badge || service.label}</span>
                 <h3 className="text-2xl font-display font-bold text-white group-hover:text-brand-gold transition-colors">{service.title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{service.desc}</p>
               </div>
             </motion.div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const GALLERY_IMAGES = [
+  { url: "/well.png", title: "Heavy Duty Drilling", desc: "Precision rig setup in challenging terrain." },
+  { url: "/bore.jpeg", title: "High Pressure Strike", desc: "Successful aquifer penetration at 150m." },
+  { url: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&q=80&w=2000", title: "Solar Pump System", desc: "Sustainable water distribution solution." },
+  { url: "https://images.unsplash.com/photo-1581094288338-2314dddb7ec3?auto=format&fit=crop&q=80&w=2000", title: "Site Surveying", desc: "Hydrogeological mapping and analysis." },
+  { url: "https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=2000", title: "Industrial Infrastructure", desc: "Large scale water distribution network." }
+];
+
+const Gallery = () => {
+  const { data } = usePbCollection<any>('gallery', { sort: 'order' });
+  const [index, setIndex] = useState(0);
+
+  const images = data.length > 0 ? data.map(img => ({
+    url: getPbImageUrl(img, img.image, '1200x0'),
+    title: img.title,
+    desc: img.desc
+  })) : GALLERY_IMAGES;
+
+  const next = () => setIndex((i) => (i + 1) % images.length);
+  const prev = () => setIndex((i) => (i - 1 + images.length) % images.length);
+
+  useEffect(() => {
+    const timer = setInterval(next, 5000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <section id="gallery" className="section-padding bg-brand-blue overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col items-center text-center mb-20">
+          <span className="text-xs font-black uppercase tracking-[0.4em] text-brand-aqua mb-4">Visual Records</span>
+          <h2 className="text-4xl md:text-5xl font-display font-black text-white uppercase italic tracking-tighter">THE FIELD ARCHIVE.</h2>
+        </div>
+
+        <div className="relative h-[400px] md:h-[600px] flex items-center justify-center perspective-1500">
+          <AnimatePresence initial={false}>
+            {images.map((img, i) => {
+              const offset = (i - index + images.length) % images.length;
+              const isCenter = offset === 0;
+              
+              // Simple circular indexing for variable items
+              let position = offset;
+              if (position > images.length / 2) position -= images.length;
+
+              const isVisible = Math.abs(position) <= 2;
+              if (!isVisible) return null;
+
+              let x = 0;
+              let rotateY = 0;
+              let z = 0;
+              let opacity = 0;
+              let scale = 0.8;
+
+              if (position === 0) { // Center
+                x = 0;
+                z = 200;
+                opacity = 1;
+                scale = 1;
+              } else if (position === 1) { // Right 1
+                x = "45%";
+                rotateY = -45;
+                z = 0;
+                opacity = 0.6;
+              } else if (position === 2) { // Right 2
+                x = "80%";
+                rotateY = -60;
+                z = -200;
+                opacity = 0.2;
+              } else if (position === -1) { // Left 1
+                x = "-45%";
+                rotateY = 45;
+                z = 0;
+                opacity = 0.6;
+              } else if (position === -2) { // Left 2
+                x = "-80%";
+                rotateY = 60;
+                z = -200;
+                opacity = 0.2;
+              }
+
+              return (
+                <motion.div
+                  key={i}
+                  initial={false}
+                  animate={{ 
+                    x, 
+                    rotateY, 
+                    z, 
+                    opacity, 
+                    scale,
+                    filter: position === 0 ? "grayscale(0%)" : "grayscale(100%) brightness(50%)",
+                  }}
+                  transition={{ type: "spring", stiffness: 200, damping: 25 }}
+                  className="absolute w-[300px] md:w-[600px] aspect-video cursor-pointer"
+                  onClick={() => setIndex(i)}
+                  style={{ transformStyle: "preserve-3d" }}
+                >
+                  <div className="relative w-full h-full border border-white/10 p-2 bg-brand-blue/50 backdrop-blur-sm overflow-hidden group">
+                    {/* HUD Corners */}
+                    <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-brand-aqua opacity-50 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-brand-aqua opacity-50 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-brand-aqua opacity-50 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-brand-aqua opacity-50 group-hover:opacity-100 transition-opacity" />
+                    
+                    <img src={img.url} alt={img.title} className="w-full h-full object-cover" />
+                    
+                    {/* Caption Overlay */}
+                    {position === 0 && (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="absolute bottom-6 left-6 right-6 bg-brand-blue/80 backdrop-blur-xl p-6 border-l-4 border-brand-gold shadow-2xl"
+                      >
+                        <h3 className="text-brand-aqua text-xs font-black uppercase tracking-[0.3em] mb-2">{img.title}</h3>
+                        <p className="text-white/60 text-[10px] uppercase font-bold leading-relaxed tracking-wider">{img.desc}</p>
+                      </motion.div>
+                    )}
+
+                    {/* Scan line effect */}
+                    {position === 0 && (
+                      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-aqua/10 to-transparent h-[10%] w-full animate-scan pointer-events-none" />
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+
+        {/* Controls */}
+        <div className="flex justify-center items-center gap-12 mt-12">
+          <button onClick={prev} className="text-white/50 hover:text-brand-aqua transition-all p-4 group">
+             <ArrowRight className="w-8 h-8 rotate-180 group-hover:-translate-x-2 transition-transform" />
+          </button>
+          <div className="flex gap-4">
+             {images.map((_, i) => (
+               <button 
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`h-1 transition-all duration-500 rounded-full ${index === i ? 'w-12 bg-brand-aqua' : 'w-4 bg-white/10'}`}
+               />
+             ))}
+          </div>
+          <button onClick={next} className="text-white/50 hover:text-brand-aqua transition-all p-4 group">
+             <ArrowRight className="w-8 h-8 group-hover:translate-x-2 transition-transform" />
+          </button>
         </div>
       </div>
     </section>
@@ -618,20 +805,65 @@ const WhyChooseUs = () => {
   );
 };
 
-const Clients = () => {
+const CLIENT_NAMES = [
+  { name: "Kitale Water Authority", variant: "engraved" },
+  { name: "TransNzoia County", variant: "bold" },
+  { name: "AgroServe Kenya Ltd", variant: "code" },
+  { name: "Western Seeds Co.", variant: "engraved" },
+  { name: "Hope Springs NGO", variant: "bold" },
+  { name: "Rift Valley Farms", variant: "code" },
+  { name: "Meru Highlands Resort", variant: "engraved" }
+];
+
+const ClientToken = ({ client }: { client: { name: string, variant: string } }) => {
+  const styles = {
+    engraved: "font-display italic text-3xl md:text-5xl text-white/90",
+    code: "font-mono uppercase tracking-[0.4em] text-xl md:text-3xl text-brand-aqua/80",
+    bold: "font-sans font-black uppercase tracking-tighter text-3xl md:text-5xl text-white/60"
+  };
+
   return (
-    <section id="clients" className="section-padding bg-brand-blue border-t border-white/5">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col items-center text-center mb-16 px-6">
-          <span className="text-xs font-black uppercase tracking-[0.4em] text-brand-aqua mb-4">Our Track Record</span>
-          <h2 className="text-4xl md:text-5xl font-display font-black text-white">PROUD TO SERVE.</h2>
+    <span className={`inline-block px-12 transition-all duration-500 hover:scale-110 hover:text-brand-aqua cursor-pointer hover:[text-shadow:0_0_30px_rgba(0,194,199,0.5)] ${styles[client.variant as keyof typeof styles]}`}>
+      {client.name}
+    </span>
+  );
+};
+
+const Clients = () => {
+  const { data } = usePbCollection<any>('clients', { sort: 'order' });
+  const clientsList = data.length > 0 ? data : CLIENT_NAMES;
+  const doubleClients = [...clientsList, ...clientsList];
+
+  return (
+    <section id="clients" className="py-24 bg-brand-blue border-y border-brand-aqua/15 overflow-hidden">
+      <div className="flex flex-col items-center text-center mb-16 px-6">
+        <span className="text-xs font-black uppercase tracking-[0.4em] text-brand-aqua mb-4">Our Track Record</span>
+        <h2 className="text-4xl md:text-5xl font-display font-black text-white italic tracking-tighter uppercase">THE ROSTER.</h2>
+      </div>
+
+      <div className="space-y-12">
+        {/* Row 1: Right to Left */}
+        <div className="flex group whitespace-nowrap overflow-hidden">
+          <div className="flex animate-marquee-left group-hover:paused py-4">
+            {doubleClients.map((client, i) => (
+              <div key={i} className="flex items-center">
+                <ClientToken client={client} />
+                <span className="text-brand-gold text-2xl mx-4">◈</span>
+              </div>
+            ))}
+          </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-           {['Residential', 'Commercial', 'Agricultural', 'Industrial'].map((client, i) => (
-             <div key={i} className="bg-white/5 border border-white/10 p-10 flex items-center justify-center text-white/20 font-black text-2xl italic uppercase tracking-tighter hover:text-brand-aqua transition-colors">
-               {client}
-             </div>
-           ))}
+
+        {/* Row 2: Left to Right */}
+        <div className="flex group whitespace-nowrap overflow-hidden">
+          <div className="flex animate-marquee-right group-hover:paused py-4">
+            {doubleClients.map((client, i) => (
+              <div key={i} className="flex items-center">
+                <ClientToken client={client} />
+                <span className="text-brand-gold text-2xl mx-4">◈</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -810,7 +1042,7 @@ const Footer = () => {
 
         <div className="border-t border-white/5 py-10 flex flex-col md:flex-row justify-between items-center gap-6">
            <p className="text-[10px] uppercase font-black tracking-[0.2em] md:tracking-[0.4em] text-white/30 text-center md:text-left">
-             © 2025 Springfine Hydroconsulting. All Rights Reserved.
+             © 2025 Springfine Hydrosolutions. All Rights Reserved.
            </p>
            <div className="flex flex-wrap justify-center md:justify-end gap-6 md:gap-8 text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-white/30">
               <span className="hover:text-brand-aqua cursor-pointer transition-colors">Integrity</span>
@@ -936,6 +1168,7 @@ export default function App() {
         <StatsSection />
         <About />
         <Services />
+        <Gallery />
         <WhyChooseUs />
         <Clients />
         <Values />
