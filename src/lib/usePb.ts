@@ -14,7 +14,6 @@ export function usePbCollection<T>(collectionName: string, options = {}) {
         setLoading(true);
         // By default sorting by order if it exists, otherwise by created
         const resultList = await pb.collection(collectionName).getFullList<T>({
-          sort: '-created',
           ...options
         });
         
