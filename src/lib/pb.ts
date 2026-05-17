@@ -1,11 +1,18 @@
 import PocketBase from 'pocketbase';
 
-// Using the provided PocketHost URL
 const url = 'https://springfine.pockethost.io/';
 export const pb = new PocketBase(url);
 
-// Utility to get file URLs from PocketBase records
-export const getPbImageUrl = (record: any, filename: string, thumb = '1200x0') => {
-  if (!filename) return '';
-  return pb.files.getURL(record, filename, { thumb });
+/**
+ * Build a PocketBase file URL directly — more reliable than pb.files.getURL()
+ * which has inconsistencies across SDK versions.
+ *
+ * @param record  - The full PocketBase record object (must have collectionId + id)
+ * @param filename - The filename string stored in the record field
+ * @param thumb   - Optional thumbnail size like '800x0' or '400x400'
+ */
+export const getPbImageUrl = (record: any, filename: string, thumb = '') => {
+  if (!filename || !record?.collectionId || !record?.id) return '';
+  const base = `${url}api/files/${record.collectionId}/${record.id}/${encodeURIComponent(filename)}`;
+  return thumb ? `${base}?thumb=${thumb}` : base;
 };

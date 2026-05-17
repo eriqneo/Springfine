@@ -527,7 +527,10 @@ const Director = () => {
     photo: ''
   };
 
-  const photoUrl = content.photo ? getPbImageUrl(content, content.photo, '800x0') : '/bore.jpeg'; // fallback
+  // Build photo URL directly — check record has collectionId (full PB record)
+  const photoUrl = (content.photo && content.collectionId && content.id)
+    ? getPbImageUrl(content, content.photo, '800x0')
+    : '/bore.jpeg';
   const credentialsList = content.credentials ? content.credentials.split(',') : [];
 
   return (
