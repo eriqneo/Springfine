@@ -1004,6 +1004,38 @@ const Values = () => {
 };
 
 const Contact = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    
+    const formData = new FormData(e.currentTarget);
+    // Add Web3Forms access key
+    formData.append("access_key", "YOUR_WEB3FORMS_ACCESS_KEY_HERE");
+    
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        body: formData
+      });
+      
+      const result = await response.json();
+      if (result.success) {
+        setSubmitStatus('success');
+        e.currentTarget.reset();
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="section-padding bg-[#F0F6FF] text-brand-blue overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
@@ -1041,31 +1073,58 @@ const Contact = () => {
            <div className="absolute top-0 right-0 w-20 h-20 bg-brand-aqua/5 group-hover:scale-150 transition-transform duration-700 -z-0" />
            <div className="bg-gray-50/50 p-12 h-full flex flex-col justify-center relative z-10">
               <h3 className="text-2xl font-display font-black mb-8">Enquiry Form</h3>
-              <form className="space-y-6">
+              
+              {submitStatus === 'success' && (
+                <div className="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 text-sm font-bold animate-fade-in">
+                  Thank you! Your request has been sent successfully. We will get back to you soon.
+                </div>
+              )}
+              
+              {submitStatus === 'error' && (
+                <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 text-sm font-bold animate-fade-in">
+                  Oops! Something went wrong. Please try again or contact us directly via email.
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
                  <div>
+                   <input type="hidden" name="subject" value="New Website Enquiry from Springfine Hydrosolutions" />
+                   <input type="hidden" name="from_name" value="Springfine Website Form" />
+                   
                    <label className="text-[10px] font-black tracking-widest uppercase mb-1 block opacity-50">Full Name</label>
-                   <input type="text" placeholder="Your Name" className="w-full bg-white border-b-2 border-brand-blue/10 py-4 text-sm font-bold focus:border-brand-aqua focus:outline-none transition-colors" />
+                   <input type="text" name="name" required placeholder="Your Name" className="w-full bg-white border-b-2 border-brand-blue/10 py-4 text-sm font-bold focus:border-brand-aqua focus:outline-none transition-colors" />
                  </div>
                  <div>
                    <label className="text-[10px] font-black tracking-widest uppercase mb-1 block opacity-50">Phone Number</label>
-                   <input type="tel" placeholder="07XX XXX XXX" className="w-full bg-white border-b-2 border-brand-blue/10 py-4 text-sm font-bold focus:border-brand-aqua focus:outline-none transition-colors" />
+                   <input type="tel" name="phone" required placeholder="07XX XXX XXX" className="w-full bg-white border-b-2 border-brand-blue/10 py-4 text-sm font-bold focus:border-brand-aqua focus:outline-none transition-colors" />
                  </div>
                  <div>
                    <label className="text-[10px] font-black tracking-widest uppercase mb-1 block opacity-50">Service Needed</label>
-                   <select className="w-full bg-white border-b-2 border-brand-blue/10 py-4 text-sm font-bold focus:border-brand-aqua focus:outline-none transition-colors appearance-none cursor-pointer">
-                      <option>Borehole Drilling</option>
-                      <option>Pump Installation</option>
-                      <option>Water Testing</option>
-                      <option>Rehabilitation</option>
-                      <option>Piping & Distribution</option>
+                   <select name="service" required className="w-full bg-white border-b-2 border-brand-blue/10 py-4 text-sm font-bold focus:border-brand-aqua focus:outline-none transition-colors appearance-none cursor-pointer">
+                      <option value="Borehole Drilling">Borehole Drilling</option>
+                      <option value="Pump Installation">Pump Installation</option>
+                      <option value="Water Testing">Water Testing</option>
+                      <option value="Rehabilitation">Rehabilitation</option>
+                      <option value="Piping & Distribution">Piping & Distribution</option>
                    </select>
                  </div>
                  <div>
                    <label className="text-[10px] font-black tracking-widest uppercase mb-1 block opacity-50">Your Message</label>
-                   <textarea placeholder="Describe your project..." className="w-full bg-white border-b-2 border-brand-blue/10 py-4 text-sm font-bold focus:border-brand-aqua focus:outline-none transition-colors h-24 resize-none"></textarea>
+                   <textarea name="message" required placeholder="Describe your project..." className="w-full bg-white border-b-2 border-brand-blue/10 py-4 text-sm font-bold focus:border-brand-aqua focus:outline-none transition-colors h-24 resize-none"></textarea>
                  </div>
-                 <button className="w-full py-5 bg-brand-aqua text-white text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.3em] hover:bg-brand-blue transition-all duration-300 shadow-lg shadow-brand-aqua/20 mt-6">
-                   Submit Request
+                 <button 
+                   type="submit" 
+                   disabled={isSubmitting}
+                   className="w-full py-5 bg-brand-aqua text-white text-xs font-black uppercase tracking-[0.15em] sm:tracking-[0.3em] hover:bg-brand-blue transition-all duration-300 shadow-lg shadow-brand-aqua/20 mt-6 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+                 >
+                   {isSubmitting ? (
+                     <>
+                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                       Sending...
+                     </>
+                   ) : (
+                     'Submit Request'
+                   )}
                  </button>
               </form>
            </div>
