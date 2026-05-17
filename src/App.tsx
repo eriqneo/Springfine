@@ -33,6 +33,7 @@ import { usePbCollection } from './lib/usePb';
 const NAV_ITEMS = [
   { name: 'Home', id: 'home' },
   { name: 'About', id: 'about' },
+  { name: 'Director', id: 'director' },
   { name: 'Services', id: 'services' },
   { name: 'Gallery', id: 'gallery' },
   { name: 'Why Us', id: 'why-us' },
@@ -507,6 +508,105 @@ const About = () => {
           </p>
           <div className="pt-6">
              <button className="btn-primary px-12">Learn More</button>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+const Director = () => {
+  const { data } = usePbCollection<any>('director');
+  
+  const content = data[0] || {
+    name: 'John Atura',
+    title: 'Founder & Managing Director',
+    bio: 'Dedicated to providing sustainable water solutions to communities across Kenya. With a passion for engineering and environmental stewardship, he leads Springfine Hydrosolutions with a commitment to excellence and integrity.',
+    quote: 'Water is not just a resource; it is the foundation of life and community development.',
+    credentials: 'NEMA Certified,WRMA Licensed,15+ Years Experience',
+    photo: ''
+  };
+
+  const photoUrl = content.photo ? getPbImageUrl(content, content.photo, '800x0') : '/bore.jpeg'; // fallback
+  const credentialsList = content.credentials ? content.credentials.split(',') : [];
+
+  return (
+    <section id="director" className="section-padding bg-brand-blue relative overflow-hidden">
+      {/* Background geometric slice */}
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-brand-aqua/5 -skew-x-12 translate-x-1/4 pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+        
+        {/* Photo Column */}
+        <motion.div 
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="lg:col-span-5 relative"
+        >
+          <div className="relative aspect-[3/4] w-full max-w-md mx-auto group">
+            {/* HUD corners */}
+            <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-brand-aqua z-10" />
+            <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-brand-aqua z-10" />
+            <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-brand-aqua z-10" />
+            <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-brand-aqua z-10" />
+            
+            {/* Image */}
+            <div className="w-full h-full border border-white/10 overflow-hidden bg-brand-blue/50 backdrop-blur-sm p-3">
+              <img src={photoUrl} alt={content.name} className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700" />
+              
+              {/* Scan line */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-aqua/20 to-transparent h-[10%] w-full animate-scan pointer-events-none" />
+            </div>
+
+            {/* Gold Accent */}
+            <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-brand-gold -z-10" />
+          </div>
+        </motion.div>
+
+        {/* Text Column */}
+        <motion.div 
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="lg:col-span-7 space-y-10"
+        >
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <span className="text-brand-gold text-2xl">◈</span>
+              <span className="text-brand-aqua font-mono uppercase tracking-[0.4em] text-sm">Director</span>
+            </div>
+            
+            <h2 className="text-5xl md:text-7xl font-display italic font-black text-white leading-none break-words">
+              {content.name.split(' ').map((part: string, i: number) => (
+                <span key={i} className="block">{part.toUpperCase()}</span>
+              ))}
+            </h2>
+            <div className="h-px w-24 bg-brand-aqua/50" />
+            <p className="text-brand-aqua font-mono uppercase tracking-[0.3em] text-xs pt-2">
+              ──── {content.title} ────
+            </p>
+          </div>
+
+          <div className="border-l-4 border-brand-gold pl-6 py-2">
+            <p className="text-2xl md:text-3xl font-display italic text-white/80 leading-snug">
+              "{content.quote}"
+            </p>
+          </div>
+
+          <p className="text-white/60 leading-relaxed font-medium">
+            {content.bio}
+          </p>
+
+          <div className="flex flex-wrap gap-4 pt-4">
+            {credentialsList.map((cred: string, i: number) => (
+              <div key={i} className="flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                <div className="w-2 h-2 rounded-full bg-brand-aqua" />
+                <span className="text-[10px] uppercase font-bold tracking-widest text-white/80">{cred.trim()}</span>
+              </div>
+            ))}
           </div>
         </motion.div>
       </div>
@@ -1167,6 +1267,7 @@ export default function App() {
         <Hero />
         <StatsSection />
         <About />
+        <Director />
         <Services />
         <Gallery />
         <WhyChooseUs />

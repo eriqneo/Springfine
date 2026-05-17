@@ -1,7 +1,7 @@
 /**
  * pb-rebuild.ts
- * Deletes all Springfine collections and recreates them
- * with the correct schema format for PocketBase v0.22+
+ * Recreates all Springfine collections with correct schema (PocketBase v0.23+)
+ * and seeds all records. Safe to run multiple times (skips existing collections).
  *
  * Run: npx tsx scripts/pb-rebuild.ts
  */
@@ -10,12 +10,12 @@ import PocketBase from 'pocketbase';
 const pb = new PocketBase('https://springfine.pockethost.io/');
 
 async function main() {
-  // ── Auth ────────────────────────────────────────────────────
+  // ── Auth (PocketBase v0.23+ uses _superusers collection) ────
   console.log('🔐 Authenticating...');
-  await pb.admins.authWithPassword('aturaerick@gmail.com', 'dGY@SrzA86PQc5n');
+  await pb.collection('_superusers').authWithPassword('aturaerick@gmail.com', 'dGY@SrzA86PQc5n');
   console.log('✅ Authenticated.\n');
 
-  const COLLECTIONS = ['hero', 'stats', 'services', 'gallery', 'clients', 'values', 'contact_info'];
+  const COLLECTIONS = ['hero', 'stats', 'services', 'gallery', 'clients', 'values', 'contact_info', 'director'];
 
   // ── Step 1: Delete existing empty collections ────────────────
   console.log('🗑️  Deleting old collections...');
@@ -120,6 +120,20 @@ async function main() {
   });
   console.log('  ✅ contact_info');
 
+  // DIRECTOR
+  await pb.collections.create({
+    name: 'director', type: 'base', listRule: '', viewRule: '',
+    fields: [
+      { type: 'text', name: 'name', required: true },
+      { type: 'text', name: 'title', required: true },
+      { type: 'text', name: 'bio', required: true },
+      { type: 'text', name: 'quote', required: true },
+      { type: 'text', name: 'credentials', required: true },
+      { type: 'file', name: 'photo', required: false, maxSelect: 1, mimeTypes: ['image/jpeg','image/png','image/webp'] },
+    ]
+  });
+  console.log('  ✅ director');
+
   // ── Step 3: Seed records ─────────────────────────────────────
   console.log('\n🌱 Seeding records...');
 
@@ -175,6 +189,15 @@ async function main() {
     address:  'Kitale, Trans-Nzoia County, Kenya',
     whatsapp: '+254 700 000000',
     po_box:   'P.O. Box 1234, Kitale',
+  });
+
+  // Director
+  await create('director', {
+    name: 'John Atura',
+    title: 'Founder & Managing Director',
+    bio: 'Dedicated to providing sustainable water solutions to communities across Kenya. With a passion for engineering and environmental stewardship, he leads Springfine Hydrosolutions with a commitment to excellence and integrity.',
+    quote: 'Water is not just a resource; it is the foundation of life and community development.',
+    credentials: 'NEMA Certified,WRMA Licensed,15+ Years Experience',
   });
 
   // ── Step 4: Verify ───────────────────────────────────────────

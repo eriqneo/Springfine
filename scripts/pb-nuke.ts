@@ -8,7 +8,7 @@ async function main() {
   await pb.admins.authWithPassword('aturaerick@gmail.com', 'dGY@SrzA86PQc5n');
   console.log('✅ Auth ok\n');
 
-  const TARGET = ['hero','stats','services','gallery','clients','values','contact_info'];
+  const TARGET = ['hero','stats','services','gallery','clients','values','contact_info', 'director'];
 
   // List ALL collections
   const all = await pb.collections.getFullList();
@@ -16,11 +16,22 @@ async function main() {
 
   for (const col of all) {
     if (TARGET.includes(col.name)) {
-      try {
-        await pb.collections.delete(col.id);
-        console.log(`  🗑️  Deleted: ${col.name} (${col.id})`);
-      } catch(e: any) {
-        console.log(`  ❌ Could not delete ${col.name}:`, e?.response?.data ?? e?.message);
+      let success = false;
+      let retries = 3;
+      while (!success && retries > 0) {
+        try {
+          await pb.collections.delete(col.id);
+          console.log(`  🗑️  Deleted: ${col.name} (${col.id})`);
+          success = true;
+          await new Promise(r => setTimeout(r, 1000));
+        } catch(e: any) {
+          retries--;
+          console.log(`  ❌ Could not delete ${col.name}:`, e?.response?.data ?? e?.message);
+          if (retries > 0) {
+            console.log(`  ⏳ Retrying ${col.name}...`);
+            await new Promise(r => setTimeout(r, 2000));
+          }
+        }
       }
     }
   }
