@@ -201,7 +201,7 @@ create_record "contact_info" '{
 create_record "director" '{
   "name":"John Atura",
   "title":"Founder & Managing Director",
-  "bio":"Dedicated to providing sustainable water solutions to communities across Kenya. With a passion for engineering and environmental stewardship, he leads Springfine Hydrosolutions with a commitment to excellence and integrity.",
+  "bio":"Dedicated to providing sustainable water solutions to communities across Kenya. With a passion for engineering and environmental stewardship, he leads Springfine Hydrosolutions LTD with a commitment to excellence and integrity.",
   "quote":"Water is not just a resource; it is the foundation of life and community development.",
   "credentials":"NEMA Certified,WRMA Licensed,15+ Years Experience"
 }'

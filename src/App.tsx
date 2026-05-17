@@ -222,8 +222,8 @@ const Navbar = () => {
               <span className={`font-display font-black tracking-tight text-white uppercase transition-all duration-300 ${isScrolled ? 'text-base sm:text-lg' : 'text-lg sm:text-[2rem]'}`}>
                 SPRINGFINE
               </span>
-              <span className={`font-display font-black tracking-tight text-white uppercase transition-all duration-300 ${isScrolled ? 'text-base sm:text-lg' : 'text-lg sm:text-[2rem]'} ${isScrolled ? 'hidden md:block' : 'hidden sm:block'}`}>
-                HYDROSOLUTIONS
+              <span className={`font-display font-black tracking-tight text-white uppercase transition-all duration-300 ${isScrolled ? 'text-base sm:text-lg' : 'text-lg sm:text-[2rem]'} ${isScrolled ? 'hidden md:block' : 'hidden sm:block'} flex items-center gap-1`}>
+                HYDROSOLUTIONS <span className="text-brand-aqua text-[0.6em] font-black italic">LTD</span>
               </span>
             </div>
           </a>
@@ -326,7 +326,7 @@ const Hero = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-brand-blue/40 z-10" />
         <img 
           src={bgUrl} 
-          alt="Springfine Hydrosolutions Drilling" 
+          alt="Springfine Hydrosolutions LTD Drilling" 
           className="w-full h-full object-cover opacity-20 mix-blend-overlay"
         />
       </div>
@@ -504,7 +504,7 @@ const About = () => {
             <span className="text-brand-aqua">COMMUNITIES.</span>
           </h2>
           <p className="text-white/60 leading-relaxed text-lg font-medium">
-            Springfine Hydrosolutions is Kitale's most trusted partner in innovative water solutions. We specialized in precision borehole drilling and sustainable irrigation infrastructures.
+            Springfine Hydrosolutions LTD is Kitale's most trusted partner in innovative water solutions. We specialized in precision borehole drilling and sustainable irrigation infrastructures.
           </p>
           <div className="pt-6">
              <button className="btn-primary px-12">Learn More</button>
@@ -521,7 +521,7 @@ const Director = () => {
   const content = data[0] || {
     name: 'John Atura',
     title: 'Founder & Managing Director',
-    bio: 'Dedicated to providing sustainable water solutions to communities across Kenya. With a passion for engineering and environmental stewardship, he leads Springfine Hydrosolutions with a commitment to excellence and integrity.',
+    bio: 'Dedicated to providing sustainable water solutions to communities across Kenya. With a passion for engineering and environmental stewardship, he leads Springfine Hydrosolutions LTD with a commitment to excellence and integrity.',
     quote: 'Water is not just a resource; it is the foundation of life and community development.',
     credentials: 'NEMA Certified,WRMA Licensed,15+ Years Experience',
     photo: ''
@@ -1145,7 +1145,7 @@ const Footer = () => {
 
         <div className="border-t border-white/5 py-10 flex flex-col md:flex-row justify-between items-center gap-6">
            <p className="text-[10px] uppercase font-black tracking-[0.2em] md:tracking-[0.4em] text-white/30 text-center md:text-left">
-             © 2025 Springfine Hydrosolutions. All Rights Reserved.
+             © 2025 Springfine Hydrosolutions LTD. All Rights Reserved.
            </p>
            <div className="flex flex-wrap justify-center md:justify-end gap-6 md:gap-8 text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.4em] text-white/30">
               <span className="hover:text-brand-aqua cursor-pointer transition-colors">Integrity</span>
