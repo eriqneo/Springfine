@@ -1006,6 +1006,14 @@ const Values = () => {
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const { data: contactData } = usePbCollection<any>('contact_info');
+  const ci = contactData[0] || {
+    phone: '+254 706 594 256',
+    email: 'springfinehydrosolutionsltd@gmail.com',
+    address: 'Kitale, Trans-Nzoia County, Kenya',
+    whatsapp: '+254706594256',
+    po_box: 'P.O. Box 262-30200, Kitale',
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -1052,19 +1060,19 @@ const Contact = () => {
               <div className="w-12 h-12 rounded-full bg-brand-blue/5 flex items-center justify-center text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-all duration-300">
                 <MapPin className="w-5 h-5" />
               </div>
-              <span className="text-sm font-bold tracking-wide">P.O. Box 262-30200, Kitale, Kenya</span>
+              <span className="text-sm font-bold tracking-wide">{ci.po_box || ci.address}</span>
             </div>
             <div className="flex items-center gap-6 group">
               <div className="w-12 h-12 rounded-full bg-brand-blue/5 flex items-center justify-center text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-all duration-300">
                 <Phone className="w-5 h-5" />
               </div>
-              <span className="text-sm font-bold tracking-wide">0706 594 256</span>
+              <a href={`tel:${(ci.phone||'').replace(/\s/g,'')}`} className="text-sm font-bold tracking-wide hover:text-brand-aqua transition-colors">{ci.phone}</a>
             </div>
             <div className="flex items-center gap-6 group">
               <div className="w-12 h-12 rounded-full bg-brand-blue/5 flex items-center justify-center text-brand-blue group-hover:bg-brand-blue group-hover:text-white transition-all duration-300">
                 <Mail className="w-5 h-5" />
               </div>
-              <span className="text-sm font-bold tracking-wide">kwangila57@gmail.com</span>
+              <a href={`mailto:${ci.email}`} className="text-sm font-bold tracking-wide hover:text-brand-aqua transition-colors break-all">{ci.email}</a>
             </div>
           </div>
         </div>
@@ -1135,6 +1143,14 @@ const Contact = () => {
 };
 
 const Footer = () => {
+  const { data: contactData } = usePbCollection<any>('contact_info');
+  const ci = contactData[0] || {
+    phone: '+254 706 594 256',
+    email: 'springfinehydrosolutionsltd@gmail.com',
+    address: 'Kitale, Trans-Nzoia County, Kenya',
+    whatsapp: '+254706594256',
+    po_box: 'P.O. Box 262-30200, Kitale',
+  };
   return (
     <footer className="bg-[#0A1F3D] pt-20 relative overflow-hidden">
       {/* Animated Ripple Effect */}
@@ -1188,15 +1204,15 @@ const Footer = () => {
              <div className="space-y-6">
                 <div className="flex items-center gap-3">
                    <Phone className="w-4 h-4 text-brand-gold" />
-                   <span className="text-sm font-bold">0706 594 256</span>
+                   <a href={`tel:${(ci.phone||'').replace(/\s/g,'')}`} className="text-sm font-bold hover:text-brand-aqua transition-colors">{ci.phone}</a>
                 </div>
                 <div className="flex items-center gap-3">
                    <Mail className="w-4 h-4 text-brand-gold" />
-                   <span className="text-sm font-bold">kwangila57@gmail.com</span>
+                   <a href={`mailto:${ci.email}`} className="text-sm font-bold hover:text-brand-aqua transition-colors break-all">{ci.email}</a>
                 </div>
                 <div className="flex items-center gap-3">
                    <MapPin className="w-4 h-4 text-brand-gold" />
-                   <span className="text-sm font-bold">Kitale, Kenya</span>
+                   <span className="text-sm font-bold">{ci.address?.split(',')[0] || 'Kitale, Kenya'}</span>
                 </div>
              </div>
           </div>
