@@ -219,11 +219,11 @@ const Navbar = () => {
               )}
             </AnimatePresence>
             <div className="flex flex-col leading-none">
-              <span className={`font-display font-black tracking-tight text-white uppercase transition-all duration-300 ${isScrolled ? 'text-base sm:text-lg' : 'text-lg sm:text-[2rem]'}`}>
+              <span className={`font-display font-black tracking-tight text-white uppercase transition-all duration-300 ${isScrolled ? 'text-lg sm:text-xl' : 'text-2xl sm:text-[2.25rem]'}`}>
                 SPRINGFINE
               </span>
-              <span className={`font-display font-black tracking-tight text-white uppercase transition-all duration-300 ${isScrolled ? 'text-base sm:text-lg' : 'text-lg sm:text-[2rem]'} ${isScrolled ? 'hidden md:block' : 'hidden sm:block'} flex items-center gap-1`}>
-                HYDROSOLUTIONS <span className="text-brand-aqua text-[0.6em] font-black italic">LTD</span>
+              <span className={`font-mono font-bold tracking-[0.22em] text-brand-aqua uppercase transition-all duration-300 ${isScrolled ? 'text-[9px] sm:text-xs' : 'text-[11px] sm:text-sm'} flex items-center gap-1`}>
+                HYDROSOLUTIONS <span className="text-brand-gold font-black italic text-[0.8em]">LTD</span>
               </span>
             </div>
           </a>
@@ -1218,11 +1218,18 @@ const Loader = ({ onComplete }: { onComplete: () => void }) => {
           transition={{ delay: 0.5, duration: 0.8 }}
           className="text-center"
         >
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <Droplets className="w-12 h-12 text-brand-aqua" />
-            <h1 className="text-4xl md:text-5xl font-display font-black text-white tracking-tighter uppercase">SPRINGFINE</h1>
+          <div className="flex flex-col items-center">
+            <div className="flex items-center justify-center gap-4 mb-2">
+              <Droplets className="w-16 h-16 text-brand-aqua animate-pulse" />
+              <div className="text-left leading-none">
+                <h1 className="text-4xl md:text-5xl font-display font-black text-white tracking-tight uppercase">SPRINGFINE</h1>
+                <p className="text-sm md:text-base font-mono font-bold tracking-[0.22em] text-brand-aqua uppercase flex items-center gap-1 mt-1">
+                  HYDROSOLUTIONS <span className="text-brand-gold italic font-black text-[0.8em]">LTD</span>
+                </p>
+              </div>
+            </div>
+            <p className="text-white/40 font-mono tracking-[0.3em] uppercase text-[9px] sm:text-xs mt-6">Save Water, Save Earth</p>
           </div>
-          <p className="text-brand-aqua font-black uppercase tracking-[0.2em] sm:tracking-[0.5em] text-xs">Save Water, Save Earth</p>
         </motion.div>
       </div>
     </div>
