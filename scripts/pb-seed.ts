@@ -15,7 +15,7 @@ async function seed() {
   );
   
   // Use the admin token for all requests
-  pb.authStore.save(adminAuth.token, adminAuth.admin);
+  pb.authStore.save(adminAuth.token, (adminAuth as any).admin);
   console.log('✅ Authenticated.\n');
 
   // ── Helper: clear collection first, then seed ──────────────────

@@ -209,3 +209,42 @@
 .paused {
   animation-play-state: paused !important;
 }
+
+/* --- High-Tech Borehole Telemetry Explorer Styles --- */
+.radar-grid {
+  background-image: 
+    linear-gradient(rgba(0, 194, 199, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 194, 199, 0.04) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@keyframes water-drip-flow {
+  0% { transform: translateY(-100%); opacity: 0; }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(100%); opacity: 0; }
+}
+
+.animate-flow-particles {
+  animation: water-drip-flow 6s linear infinite;
+}
+
+.depth-profile-line {
+  background: linear-gradient(to bottom,
+    rgba(230, 168, 23, 0.3) 0%,
+    rgba(0, 194, 199, 0.3) 100%
+  );
+  box-shadow: 0 0 10px rgba(0, 194, 199, 0.1);
+}
+
+.telemetry-hud-glow {
+  box-shadow: inset 0 0 20px rgba(0, 194, 199, 0.1), 0 0 20px rgba(0, 194, 199, 0.05);
+}
+
+.telemetry-text-glow {
+  text-shadow: 0 0 8px rgba(0, 194, 199, 0.6);
+}
+
+.gold-text-glow {
+  text-shadow: 0 0 8px rgba(230, 168, 23, 0.6);
+}

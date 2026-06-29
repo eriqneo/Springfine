@@ -24,7 +24,7 @@ import {
   Search,
   RotateCw
 } from 'lucide-react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { pb, getPbImageUrl } from './lib/pb';
 import { usePbCollection } from './lib/usePb';
 
@@ -719,9 +719,32 @@ const GALLERY_IMAGES = [
   { url: "https://images.unsplash.com/photo-1516937941344-00b4e0337589?auto=format&fit=crop&q=80&w=2000", title: "Industrial Infrastructure", desc: "Large scale water distribution network." }
 ];
 
+const getTelemetryForIndex = (i: number) => {
+  const formations = [
+    "Confined Aquifer (Quartz)",
+    "Fractured Basalt Strata",
+    "Fissured Rock Horizon",
+    "Sandy Clay / Aquiclude",
+    "Crystalline Bedrock",
+    "Weathered Granite Layer"
+  ];
+  
+  const depth = (i + 1) * 45 + 15;
+  const formation = formations[i % formations.length];
+  const pressure = (i + 1) * 65 + 40;
+  const yieldFlow = (i + 1) * 3500 + 1500;
+  const temp = (18.2 + (i * 0.7)).toFixed(1);
+  const latMin = (15 + (i * 2)).toString().padStart(2, '0');
+  const lngMin = (0 + (i * 3)).toString().padStart(2, '0');
+  const coordinates = `1°${latMin}'22"S, 35°${lngMin}'45"E`;
+  
+  return { depth, formation, pressure, yield: yieldFlow, temp, coordinates };
+};
+
 const Gallery = () => {
   const { data } = usePbCollection<any>('gallery', { sort: 'order' });
   const [index, setIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   const images = data.length > 0 ? data.map(img => ({
     url: getPbImageUrl(img, img.image, '1200x0'),
@@ -733,130 +756,217 @@ const Gallery = () => {
   const prev = () => setIndex((i) => (i - 1 + images.length) % images.length);
 
   useEffect(() => {
-    const timer = setInterval(next, 5000);
+    if (!isAutoPlaying) return;
+    const timer = setInterval(next, 6000);
     return () => clearInterval(timer);
-  }, [images.length]);
+  }, [images.length, isAutoPlaying]);
+
+  const activeTelemetry = getTelemetryForIndex(index);
 
   return (
-    <section id="gallery" className="section-padding bg-brand-blue overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col items-center text-center mb-20">
-          <span className="text-xs font-black uppercase tracking-[0.4em] text-brand-aqua mb-4">Visual Records</span>
-          <h2 className="text-4xl md:text-5xl font-display font-black text-white uppercase italic tracking-tighter">THE FIELD ARCHIVE.</h2>
-        </div>
+    <section 
+      id="gallery" 
+      className="section-padding bg-brand-blue overflow-hidden relative border-t border-white/5"
+      onMouseEnter={() => setIsAutoPlaying(false)}
+      onMouseLeave={() => setIsAutoPlaying(true)}
+    >
+      <div className="absolute inset-0 opacity-[0.02] pointer-events-none">
+        <div className="w-full h-full bg-[radial-gradient(circle_at_center,rgba(0,194,199,0.8)_0%,transparent_60%)]" />
+      </div>
 
-        <div className="relative h-[400px] md:h-[600px] flex items-center justify-center perspective-1500">
-          <AnimatePresence initial={false}>
-            {images.map((img, i) => {
-              const offset = (i - index + images.length) % images.length;
-              const isCenter = offset === 0;
-              
-              // Simple circular indexing for variable items
-              let position = offset;
-              if (position > images.length / 2) position -= images.length;
-
-              const isVisible = Math.abs(position) <= 2;
-              if (!isVisible) return null;
-
-              let x = 0;
-              let rotateY = 0;
-              let z = 0;
-              let opacity = 0;
-              let scale = 0.8;
-
-              if (position === 0) { // Center
-                x = 0;
-                z = 200;
-                opacity = 1;
-                scale = 1;
-              } else if (position === 1) { // Right 1
-                x = "45%";
-                rotateY = -45;
-                z = 0;
-                opacity = 0.6;
-              } else if (position === 2) { // Right 2
-                x = "80%";
-                rotateY = -60;
-                z = -200;
-                opacity = 0.2;
-              } else if (position === -1) { // Left 1
-                x = "-45%";
-                rotateY = 45;
-                z = 0;
-                opacity = 0.6;
-              } else if (position === -2) { // Left 2
-                x = "-80%";
-                rotateY = 60;
-                z = -200;
-                opacity = 0.2;
-              }
-
-              return (
-                <motion.div
-                  key={i}
-                  initial={false}
-                  animate={{ 
-                    x, 
-                    rotateY, 
-                    z, 
-                    opacity, 
-                    scale,
-                    filter: position === 0 ? "grayscale(0%)" : "grayscale(100%) brightness(50%)",
-                  }}
-                  transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                  className="absolute w-[300px] md:w-[600px] aspect-video cursor-pointer"
-                  onClick={() => setIndex(i)}
-                  style={{ transformStyle: "preserve-3d" }}
-                >
-                  <div className="relative w-full h-full border border-white/10 p-2 bg-brand-blue/50 backdrop-blur-sm overflow-hidden group">
-                    {/* HUD Corners */}
-                    <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-brand-aqua opacity-50 group-hover:opacity-100 transition-opacity" />
-                    <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-brand-aqua opacity-50 group-hover:opacity-100 transition-opacity" />
-                    <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-brand-aqua opacity-50 group-hover:opacity-100 transition-opacity" />
-                    <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-brand-aqua opacity-50 group-hover:opacity-100 transition-opacity" />
-                    
-                    <img src={img.url} alt={img.title} className="w-full h-full object-cover" />
-                    
-                    {/* Caption Overlay */}
-                    {position === 0 && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="absolute bottom-6 left-6 right-6 bg-brand-blue/80 backdrop-blur-xl p-6 border-l-4 border-brand-gold shadow-2xl"
-                      >
-                        <h3 className="text-brand-aqua text-xs font-black uppercase tracking-[0.3em] mb-2">{img.title}</h3>
-                        <p className="text-white/60 text-[10px] uppercase font-bold leading-relaxed tracking-wider">{img.desc}</p>
-                      </motion.div>
-                    )}
-
-                    {/* Scan line effect */}
-                    {position === 0 && (
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-aqua/10 to-transparent h-[10%] w-full animate-scan pointer-events-none" />
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </AnimatePresence>
-        </div>
-
-        {/* Controls */}
-        <div className="flex justify-center items-center gap-12 mt-12">
-          <button onClick={prev} className="text-white/50 hover:text-brand-aqua transition-all p-4 group">
-             <ArrowRight className="w-8 h-8 rotate-180 group-hover:-translate-x-2 transition-transform" />
-          </button>
-          <div className="flex gap-4">
-             {images.map((_, i) => (
-               <button 
-                key={i}
-                onClick={() => setIndex(i)}
-                className={`h-1 transition-all duration-500 rounded-full ${index === i ? 'w-12 bg-brand-aqua' : 'w-4 bg-white/10'}`}
-               />
-             ))}
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-16 gap-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="w-2 h-2 rounded-full bg-brand-aqua animate-pulse shadow-[0_0_8px_rgba(0,194,199,0.8)]" />
+              <span className="text-xs font-black uppercase tracking-[0.4em] text-brand-aqua">Exploration Records</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-display font-black text-white uppercase italic tracking-tighter">
+              THE FIELD ARCHIVE.
+            </h2>
           </div>
-          <button onClick={next} className="text-white/50 hover:text-brand-aqua transition-all p-4 group">
-             <ArrowRight className="w-8 h-8 group-hover:translate-x-2 transition-transform" />
-          </button>
+          <p className="text-white/50 text-sm max-w-md font-medium leading-relaxed">
+            Browse our real-time core samples, aquifer tests, and geological surveys from drilling operations across East Africa.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+          {/* LEFT PANEL: DEPTH STRATA NAVIGATOR */}
+          <div className="lg:col-span-4 bg-white/[0.02] border border-white/5 backdrop-blur-md p-8 flex flex-col justify-between relative overflow-hidden telemetry-hud-glow">
+            <div className="absolute left-[39px] top-8 bottom-8 w-[2px] bg-white/10 overflow-hidden pointer-events-none">
+              <div className="absolute top-0 w-full h-[60px] bg-gradient-to-b from-transparent via-brand-aqua/40 to-transparent animate-flow-particles" />
+            </div>
+
+            <div className="space-y-6">
+              <div className="flex justify-between items-center border-b border-white/5 pb-4">
+                <span className="text-[10px] font-mono tracking-widest uppercase text-white/40">Drilling Profile</span>
+                <span className="text-[9px] font-mono tracking-widest uppercase text-brand-aqua bg-brand-aqua/10 px-2 py-0.5 border border-brand-aqua/20">Active Telemetry</span>
+              </div>
+              
+              <div className="relative flex flex-col gap-6 pl-10 py-4">
+                {images.map((img, idx) => {
+                  const telemetry = getTelemetryForIndex(idx);
+                  const isActive = index === idx;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setIndex(idx)}
+                      className="relative group text-left flex items-center justify-between w-full focus:outline-none transition-all duration-300 py-1 cursor-pointer"
+                    >
+                      <div className={`absolute left-[-29px] w-[14px] h-[14px] rounded-full border-2 bg-brand-blue transition-all duration-500 z-10 flex items-center justify-center ${
+                        isActive 
+                          ? 'border-brand-gold scale-125 shadow-[0_0_10px_rgba(230,168,23,0.8)]' 
+                          : 'border-white/20 group-hover:border-white/50'
+                      }`}>
+                        {isActive && <div className="w-1.5 h-1.5 rounded-full bg-brand-gold" />}
+                      </div>
+
+                      <div className="space-y-0.5">
+                        <p className={`font-mono text-xs font-bold transition-all duration-300 ${
+                          isActive ? 'text-brand-gold font-black scale-105 origin-left' : 'text-white/40 group-hover:text-white/70'
+                        }`}>
+                          {telemetry.depth}m
+                        </p>
+                        <p className={`text-[10px] uppercase font-bold tracking-widest transition-all duration-300 ${
+                          isActive ? 'text-white font-black' : 'text-white/20 group-hover:text-white/45'
+                        }`}>
+                          {telemetry.formation}
+                        </p>
+                      </div>
+
+                      <div className="text-[9px] font-mono opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-brand-aqua">
+                        inspect ◈
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="border-t border-white/5 pt-6 mt-8 space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white/[0.01] border border-white/5 p-4 relative hover:border-brand-aqua/20 transition-all duration-300">
+                  <span className="text-[9px] font-mono tracking-widest uppercase text-white/30 block mb-1">Pressure</span>
+                  <span className="text-xl font-mono font-bold text-white telemetry-text-glow flex items-baseline gap-1">
+                    {activeTelemetry.pressure} <span className="text-[9px] text-white/40">PSI</span>
+                  </span>
+                </div>
+                <div className="bg-white/[0.01] border border-white/5 p-4 relative hover:border-brand-aqua/20 transition-all duration-300">
+                  <span className="text-[9px] font-mono tracking-widest uppercase text-white/30 block mb-1">Flow Yield</span>
+                  <span className="text-xl font-mono font-bold text-brand-gold gold-text-glow flex items-baseline gap-1">
+                    {activeTelemetry.yield > 0 ? (activeTelemetry.yield / 1000).toFixed(1) : '0'}<span className="text-[9px] text-white/40">m³/h</span>
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white/[0.01] border border-white/5 p-4 relative">
+                  <span className="text-[9px] font-mono tracking-widest uppercase text-white/30 block mb-1">Temperature</span>
+                  <span className="text-base font-mono font-bold text-white flex items-baseline gap-0.5">
+                    {activeTelemetry.temp}<span className="text-[9px] text-white/40">°C</span>
+                  </span>
+                </div>
+                <div className="bg-white/[0.01] border border-white/5 p-4 relative overflow-hidden">
+                  <span className="text-[9px] font-mono tracking-widest uppercase text-white/30 block mb-1">Telemetry GPS</span>
+                  <span className="text-[9px] font-mono text-white/60 truncate block" title={activeTelemetry.coordinates}>
+                    {activeTelemetry.coordinates}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT PANEL: RADAR FEED & PHOTO DISPLAY */}
+          <div className="lg:col-span-8 flex flex-col justify-between gap-6">
+            <div className="relative aspect-[16/10] bg-white/[0.02] border border-white/5 backdrop-blur-md p-4 flex flex-col justify-between overflow-hidden group telemetry-hud-glow radar-grid">
+              <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-brand-aqua/40 pointer-events-none group-hover:border-brand-aqua group-hover:w-12 group-hover:h-12 transition-all duration-500" />
+              <div className="absolute top-0 right-0 w-8 h-8 border-t border-r border-brand-aqua/40 pointer-events-none group-hover:border-brand-aqua group-hover:w-12 group-hover:h-12 transition-all duration-500" />
+              <div className="absolute bottom-0 left-0 w-8 h-8 border-b border-l border-brand-aqua/40 pointer-events-none group-hover:border-brand-aqua group-hover:w-12 group-hover:h-12 transition-all duration-500" />
+              <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-brand-aqua/40 pointer-events-none group-hover:border-brand-aqua group-hover:w-12 group-hover:h-12 transition-all duration-500" />
+
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-brand-aqua/10 to-transparent h-[15%] w-full animate-scan pointer-events-none z-20" />
+
+              <div className="absolute top-6 right-6 flex items-center gap-4 text-[9px] font-mono tracking-widest text-brand-aqua/60 z-20 pointer-events-none">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-brand-aqua animate-ping" />
+                  <span>SYS_OK</span>
+                </div>
+                <span>FPS: 60/60</span>
+                <span>SIG_STR: 98%</span>
+              </div>
+
+              <div className="absolute inset-4 overflow-hidden border border-white/5 bg-brand-blue/30">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -30 }}
+                    transition={{ type: "spring", stiffness: 180, damping: 20 }}
+                    className="w-full h-full relative"
+                  >
+                    <img 
+                      src={images[index].url} 
+                      alt={images[index].title} 
+                      className="w-full h-full object-cover grayscale opacity-90 group-hover:grayscale-0 group-hover:scale-105 group-hover:opacity-100 transition-all duration-1000" 
+                    />
+                    
+                    <div className="absolute inset-0 bg-gradient-to-t from-brand-blue/90 via-brand-blue/20 to-transparent z-10" />
+                    
+                    <div className="absolute bottom-6 left-6 right-6 z-20 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                      <div className="space-y-2 max-w-lg text-left">
+                        <span className="text-[10px] font-mono tracking-[0.3em] text-brand-gold uppercase block">Depth: {activeTelemetry.depth} Meters</span>
+                        <h3 className="text-2xl md:text-3xl font-display font-black text-white italic leading-tight">
+                          {images[index].title.toUpperCase()}
+                        </h3>
+                        <p className="text-white/60 text-xs leading-relaxed max-w-md font-medium">
+                          {images[index].desc}
+                        </p>
+                      </div>
+
+                      <div className="px-5 py-2 bg-brand-aqua text-brand-blue text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
+                        Report Ref: SP-{activeTelemetry.depth}
+                      </div>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 bg-white/[0.02] border border-white/5 backdrop-blur-md px-8 py-5">
+              <div className="flex items-center gap-3 order-2 sm:order-1">
+                {images.map((_, i) => (
+                  <button 
+                    key={i}
+                    onClick={() => setIndex(i)}
+                    className={`h-1.5 rounded-full transition-all duration-500 focus:outline-none cursor-pointer ${
+                      index === i 
+                        ? 'w-10 bg-brand-gold shadow-[0_0_8px_rgba(230,168,23,0.6)]' 
+                        : 'w-2 bg-white/20 hover:bg-white/40'
+                    }`}
+                    title={`Inspect slide ${i + 1}`}
+                  />
+                ))}
+              </div>
+
+              <div className="flex items-center gap-4 order-1 sm:order-2">
+                <button 
+                  onClick={prev} 
+                  className="w-12 h-12 bg-white/5 hover:bg-brand-aqua hover:text-white text-white/60 flex items-center justify-center transition-all duration-300 border border-white/15 cursor-pointer group"
+                  title="Previous sample"
+                >
+                  <ArrowRight className="w-5 h-5 rotate-180 group-hover:-translate-x-0.5 transition-transform" />
+                </button>
+                <button 
+                  onClick={next} 
+                  className="w-12 h-12 bg-white/5 hover:bg-brand-aqua hover:text-white text-white/60 flex items-center justify-center transition-all duration-300 border border-white/15 cursor-pointer group"
+                  title="Next sample"
+                >
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
